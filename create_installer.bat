@@ -1,2 +1,2 @@
-pyinstaller.exe --onefile --windowed --icon=icon.ico .\Keep-Alive.py
+pyinstaller.exe --onefile --windowed --icon=icon.ico .\Keep-Alive.py --name Keep-Alive
 Copy icon.ico dist\
