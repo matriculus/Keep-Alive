@@ -1,4 +1,24 @@
-#!bin/python
+"""
+Keep-Alive.py
+This file is part of Keep-Alive
+
+Copyright (C) 2021 - Vishnu Pradeesh Lekshmanan
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/>.
+"""
+
+
 import pyautogui
 import tkinter as tk
 from threading import *
@@ -6,6 +26,7 @@ import datetime
 from configparser import ConfigParser
 from time import sleep
 from os import path
+import webbrowser
 
 config_object = ConfigParser()
 
@@ -28,7 +49,6 @@ config_object.read("config.ini")
 
 lock = Lock()
 
-
 class Application(tk.Tk):
     windowSettings = config_object["Windows"]
     sx, sy = int(windowSettings["WINX"]), int(windowSettings["WINY"])
@@ -43,7 +63,7 @@ class Application(tk.Tk):
         tk.Tk.__init__(self)
         self.create_window()
         self.create_label()
-        self.create_Copyright()
+        self.GitLink()
         self.frame = tk.Frame(self)
         self.frame.config(bg="white")
         self.frame.pack(side="bottom", padx=10, pady=10)
@@ -74,23 +94,28 @@ class Application(tk.Tk):
     def create_note(self):
         self.note = tk.Label(
             self.frame,
-            text=f"Note: Once started, the app shifts volume up & down by {self.sleepTime} seconds",
+            text=f"Note: Once started, the app shifts volume up & down by {self.sleepTime} seconds.\nChange settings in config.ini",
             wraplength=int(self.sx*0.7),
             justify="left",
             fg="red"
         )
-        self.note.config(font=("helvetica", 10))
-        
+        self.note.config(font=("helvetica", 9))
+
+    def callback(self, url):
+        webbrowser.open_new_tab(url)
     
-    def create_Copyright(self):
-        self.Copyright = tk.Label(
+    def GitLink(self):
+        self.GitLink = tk.Label(
             self,
-            text="© Copyright 2021. Vishnu Pradeesh Lekshmanan",
+            text="Fork Me On GitHub",
             wraplength=int(self.sx*0.8),
             justify="left",
-            bg=self.background
+            bg=self.background,
+            fg="blue",
+            cursor="hand2"
         )
-        self.Copyright.config(font=("helvetica", 8))
+        self.GitLink.config(font=("helvetica", 8))
+        self.GitLink.bind("<Button-1>", lambda e: callback("https://github.com/matriculus/Keep-Alive"))
     
     def create_button(self):
         self.button = tk.Button(
@@ -105,7 +130,7 @@ class Application(tk.Tk):
 
     def pack(self):
         self.label.pack(padx=2, pady=2)
-        self.Copyright.pack(side="bottom", padx=2, pady=2)
+        self.GitLink.pack(side="bottom", padx=2, pady=2)
         subFrame = tk.Frame(self)
         subFrame.pack(side="bottom")
         self.button.pack(side="right", pady=10, padx=10)
