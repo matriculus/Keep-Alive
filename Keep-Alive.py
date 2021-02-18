@@ -35,7 +35,7 @@ if path.exists("config.ini"):
 else:
     config_object["Windows"] = {
         "WINX": 360,
-        "WINY": 140,
+        "WINY": 130,
         "BACKGROUND": "light green",
         "FONT": "Arial",
         "FONTSIZE": 12,
