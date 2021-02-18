@@ -37,7 +37,7 @@ else:
         "WINX": 360,
         "WINY": 140,
         "BACKGROUND": "light green",
-        "FONT": "helvetica",
+        "FONT": "Arial",
         "FONTSIZE": 12,
         "SLEEPTIME": 30
     }
@@ -100,7 +100,7 @@ class Application(tk.Tk):
             justify="left",
             fg="red"
         )
-        self.note.config(font=("helvetica", 9))
+        self.note.config(font=("Arial", 9))
 
     def callback(self, url):
         webbrowser.open_new_tab(url)
@@ -115,7 +115,7 @@ class Application(tk.Tk):
             fg="blue",
             cursor="hand2"
         )
-        self.GitLink.config(font=("helvetica", 8))
+        self.GitLink.config(font=("Arial", 8))
         self.GitLink.bind("<Button-1>", lambda e: callback("https://github.com/matriculus/Keep-Alive"))
     
     def create_button(self):
