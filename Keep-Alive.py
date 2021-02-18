@@ -34,12 +34,12 @@ if path.exists("config.ini"):
     pass
 else:
     config_object["Windows"] = {
-        "WINX": 300,
-        "WINY": 120,
+        "WINX": 360,
+        "WINY": 140,
         "BACKGROUND": "light green",
         "FONT": "helvetica",
         "FONTSIZE": 12,
-        "SLEEPTIME": 60
+        "SLEEPTIME": 30
     }
     with open("config.ini", "w") as conf:
         config_object.write(conf)
@@ -76,7 +76,8 @@ class Application(tk.Tk):
 
     def create_window(self):
         # Windows dimension
-        self.iconbitmap("icon.ico")
+        # self.iconbitmap("icon.ico")
+        self.tk.call('wm', 'iconphoto', self._w, tk.PhotoImage(file="icon.png"))
         self.title("Keep Alive")
         self.config(bg=self.background)
         self.geometry(self.geo)
