@@ -159,10 +159,10 @@ class Application(tk.Tk):
             lock.release()
             if (period - lastTime).total_seconds() >= self.sleepTime:
                 if flag:
-                    pyautogui.press("shift")
+                    pyautogui.press("Volumedown")
                     flag = False
                 else:
-                    pyautogui.press("shift")
+                    pyautogui.press("Volumeup")
                     flag = True
                 lastTime = period
             sleep(0.2)
