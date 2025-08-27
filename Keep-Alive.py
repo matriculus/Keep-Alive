@@ -39,7 +39,9 @@ else:
         "BACKGROUND": "light green",
         "FONT": "Arial",
         "FONTSIZE": 12,
-        "SLEEPTIME": 30
+        "SLEEPTIME": 30,
+        "STARTTIME": "08:00",
+        "STOPTIME": "17:30"
     }
     with open("config.ini", "w") as conf:
         config_object.write(conf)
@@ -58,6 +60,8 @@ class Application(tk.Tk):
     fontSize = int(windowSettings["FONTSIZE"])
     background = windowSettings["BACKGROUND"]
     sleepTime = int(windowSettings["SLEEPTIME"])
+    startTime = datetime.datetime.strptime(windowSettings["STARTTIME"], "%H:%M").time()
+    stopTime = datetime.datetime.strptime(windowSettings["STOPTIME"], "%H:%M").time()
 
     def __init__(self):
         tk.Tk.__init__(self)
@@ -139,37 +143,41 @@ class Application(tk.Tk):
 
     def stop_alive(self):
         lock.acquire()
-        self.condition = False
+        self.running = False
         lock.release()
         self.appthread.join()
-        self.condition = True
         self.button.config(text="Start", command=self.start_thread)
 
     def start_alive(self):
-        self.button.config(text="Stop", command=self.stop_alive)
+        lock.acquire()
+        self.running = True
+        lock.release()
         lastTime = datetime.datetime.now()
         flag = True
-        lock.acquire()
-        cond = self.condition
-        lock.release()
-        while cond:
-            period = datetime.datetime.now()
-            lock.acquire()
-            cond = self.condition
-            lock.release()
-            if (period - lastTime).total_seconds() >= self.sleepTime:
-                if flag:
-                    pyautogui.press("Volumedown")
-                    flag = False
-                else:
-                    pyautogui.press("Volumeup")
-                    flag = True
-                lastTime = period
-            sleep(0.2)
+        while self.running:
+            current_time = datetime.datetime.now().time()
+            if self.startTime <= current_time <= self.stopTime:
+                period = datetime.datetime.now()
+                if (period - lastTime).total_seconds() >= self.sleepTime:
+                    if flag:
+                        pyautogui.press("Volumedown")
+                        flag = False
+                    else:
+                        pyautogui.press("Volumeup")
+                        flag = True
+                    lastTime = period
+                sleep(0.2)
+            else:
+                self.stop_alive()
+                break
 
     def start_thread(self):
-        self.appthread = Thread(target=self.start_alive)
-        self.appthread.start()
+        if self.running:
+            self.stop_alive()
+        else:
+            self.appthread = Thread(target=self.start_alive)
+            self.appthread.start()
+            self.button.config(text="Stop", command=self.stop_alive)
 
 
 def main():
